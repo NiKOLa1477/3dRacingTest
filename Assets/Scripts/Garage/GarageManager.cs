@@ -12,7 +12,7 @@ public class GarageManager : MonoBehaviour
     [SerializeField] private int Money;
     [SerializeField] private Button Buy, Upd, Go;
     [SerializeField] private GameObject LevelsWind;
-    [SerializeField] private TMP_Text moneyText;
+    [SerializeField] private TMP_Text moneyText, Cost;
     private int currCar;
     private int maxCarLevel = 5;
     private void Awake()
@@ -28,7 +28,7 @@ public class GarageManager : MonoBehaviour
         if (currCar >= cars.Count) currCar = cars.Count - 1;
         showCar(true);
         checkBtns();
-        displayMoney();
+        displayInfo();
     }
 
     private void Update()
@@ -38,9 +38,17 @@ public class GarageManager : MonoBehaviour
             Application.Quit();
         #endif
     }
-    private void displayMoney()
+    private void displayInfo()
     {
         moneyText.text = "$: " + Money.ToString();
+        if(cars[currCar].isBought)
+        {
+            Cost.text = cars[currCar].getUpdValue().ToString() + "$";
+        }
+        else
+        {
+            Cost.text = cars[currCar].Price.ToString() + "$";
+        }        
     }
     public void nextCar()
     {
@@ -48,6 +56,7 @@ public class GarageManager : MonoBehaviour
         currCar = (currCar + 1 >= cars.Count) ? 0 : currCar + 1;
         showCar(true);
         checkBtns();
+        displayInfo();
     }
     public void prevCar()
     {
@@ -55,6 +64,7 @@ public class GarageManager : MonoBehaviour
         currCar = (currCar - 1 < 0) ? cars.Count - 1 : currCar - 1;
         showCar(true);
         checkBtns();
+        displayInfo();
     }
     private void showCar(bool value)
     {
@@ -98,14 +108,14 @@ public class GarageManager : MonoBehaviour
         Money -= cars[currCar].Price;
         cars[currCar].Buy();
         checkBtns();
-        displayMoney();
+        displayInfo();
     }
     public void updCar()
     {
         Money -= (int)cars[currCar].getUpdValue();
         cars[currCar].UpdCar();
         checkBtns();
-        displayMoney();
+        displayInfo();
     }
     public void onGo()
     {
